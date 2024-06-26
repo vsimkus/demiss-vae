@@ -1,0 +1,130 @@
+seed_everything: 20220118
+experiment_subdir_base: logs/toy_mog2_large/oracle_imp_with_interpolate_control_study_indepmargmog_to_indepmarggauss/mvbvae_k5_stl_mlp_interp100/mis50
+data:
+  setup_seed: 20220118
+  dataset: 'toy_mog2_large'
+  use_test_instead_val: True
+  batch_size: 64
+  missingness: 'uniform'
+  total_miss_train: 0.5
+  total_miss_val: 0.5
+  pre_imputation: 'oracle'
+  pre_impute_val: false
+  filter_fully_missing_train: true
+  filter_fully_missing_val: true
+  data_root: ./data
+model:
+  class_path: vgiwae.models.MVBVAEMargLogprob
+  init_args:
+    marginal_eval_freq: 50
+    # NOTE: the complete_marginal_logprob/train stat will be incorrect if using zero pre-imputation.
+    marginal_eval_train: True
+    compute_complete_var_distribution_kl: True
+    mvb_sample_num_imputations: null
+    mvb_objective: mvb
+    mvb_eval_val_loss: False
+    mvb_delay_imputation: 0
+    mvb_resample_initial_imputations: False
+    vae_sampler:
+      class_path: vgiwae.utils.mog_utils.VAESampler_MoG_Oracle
+      init_args:
+        start_distribution: indep_marginal_mog
+        interpolate_method: linear
+        interpolate_target: indep_marginal_gaussian
+        interpolate_alpha: 1.0
+    generator_network:
+      class_path: vgiwae.shared.neural_nets.ResidualFCNetwork
+      init_args:
+        input_dim: 2
+        output_dim: 10
+        num_residual_blocks: 3
+        residual_block_dim: 200
+    generator_distribution: normal
+    prior_distribution: std_normal
+    var_latent_network:
+      class_path: vgiwae.shared.neural_nets.ResidualFCNetwork
+      init_args:
+        input_dim: 5
+        output_dim: 4
+        num_residual_blocks: 3
+        residual_block_dim: 200
+    var_latent_distribution: normal
+    encoder_use_mis_mask: False
+    kl_analytic: False
+    var_latent_STL: True
+    num_latent_samples: 1
+    lr_generator: 3e-4
+    lr_latent: 3e-4
+    use_lr_scheduler: True
+    amsgrad_generator: true
+    amsgrad_latent: true
+    init_imputation_distribution: True
+    num_imputations_train: 5
+    num_imputations_val: 5
+    imputation_init_train: empirical
+    imputation_init_val: empirical
+    # # MVB2 manual optimisation clipping settings
+    # mvb2_optim_gradclip_val: 10
+    # mvb2_optim_gradclip_alg: norm
+trainer:
+  # logger: true
+  # checkpoint_callback: null
+  # enable_checkpointing: true
+  # callbacks: null
+  # default_root_dir: null
+  gradient_clip_val: 10
+  gradient_clip_algorithm: norm
+  # process_position: 0
+  # num_nodes: 1
+  # num_processes: 1
+  # devices: null
+  # gpus: null
+  # auto_select_gpus: false
+  # tpu_cores: null
+  # ipus: null
+  # log_gpu_memory: null
+  # progress_bar_refresh_rate: null
+  # enable_progress_bar: true
+  # overfit_batches: 0.0
+  # track_grad_norm: -1
+  # check_val_every_n_epoch: 1
+  # fast_dev_run: false
+  # accumulate_grad_batches: null
+  max_epochs: 300
+  # min_epochs: null
+  # max_steps: -1
+  # min_steps: null
+  # max_time: null
+  # limit_train_batches: 1.0
+  # limit_val_batches: 1.0
+  # limit_test_batches: 1.0
+  # limit_predict_batches: 1.0
+  # val_check_interval: 1.0
+  # flush_logs_every_n_steps: null
+  log_every_n_steps: 1
+  # accelerator: null
+  # strategy: null
+  # sync_batchnorm: false
+  # precision: 32
+  # enable_model_summary: true
+  # weights_summary: top
+  # weights_save_path: null
+  # num_sanity_val_steps: 2
+  # resume_from_checkpoint: null
+  # profiler: null
+  # benchmark: false
+  # deterministic: false
+  # reload_dataloaders_every_n_epochs: 0
+  # reload_dataloaders_every_epoch: false
+  # auto_lr_find: false
+  # replace_sampler_ddp: true
+  # detect_anomaly: false
+  # auto_scale_batch_size: false
+  # prepare_data_per_node: null
+  # plugins: null
+  # amp_backend: native
+  # amp_level: null
+  # move_metrics_to_cpu: false
+  # multiple_trainloader_mode: max_size_cycle
+  # stochastic_weight_avg: false
+  # terminate_on_nan: null

@@ -1,0 +1,19 @@
+seed_everything: 20220118
+experiment_subdir_base: logs/toy_mog2_large/oracle_imp_with_interpolate_control_study_indepmargmog/interp050/mis50
+data:
+  setup_seed: 20220118
+  dataset: 'toy_mog2_large'
+  use_test_instead_val: True
+  batch_size: 512
+  missingness: 'uniform'
+  total_miss_train: 0.5
+  total_miss_val: 0.5
+  pre_imputation: 'oracle'
+  pre_impute_val: false
+  filter_fully_missing_train: true
+  filter_fully_missing_val: true
+  data_root: ./data
+interpolate_method: linear
+interpolate_target: indep_marginal_mog
+interpolate_alpha: 0.50
+divergence_num_samples: 10000

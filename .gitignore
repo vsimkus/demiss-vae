@@ -1,0 +1,28 @@
+# Python
+*__pycache__/
+*.pyc
+*.egg-info
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Slurm
+slurm-*.out
+
+
+# Lightning
+**/lightning_logs/**
+**/logs/**/best_val_loss_model_path.txt
+
+# Data
+**/data/MNIST/raw/
+**/data/gas/*.pickle
+**/data/hepmass/*.csv
+**/data/power/*.pickle
+**/data/power/*.csv
+**/data/power/*.txt
+**/data/power/*data.npy
+**/data/miniboone/*data.npy

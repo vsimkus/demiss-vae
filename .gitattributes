@@ -1,0 +1,2 @@
+# So that GitHub does not classify the project as a Jupyter Notebook project
+*.ipynb linguist-documentation
